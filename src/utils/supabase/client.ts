@@ -5,7 +5,11 @@ export function createClient() {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()
 
   if (!supabaseUrl || !supabaseAnonKey || !/^https?:\/\/.+/.test(supabaseUrl)) {
-    console.warn('Missing or invalid Supabase environment variables — check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY')
+    const context = typeof window !== 'undefined' ? window.location.hostname : 'SERVER'
+    console.error(`CRITICAL [${context}]: Supabase environment variables are missing or invalid.`)
+    console.warn('LOCAL: Restart your terminal and check .env.local')
+    console.warn('VERCEL: Ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in Project Settings')
+    
     return createBrowserClient(
       'https://placeholder.supabase.co',
       'placeholder'
